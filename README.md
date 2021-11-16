@@ -13,3 +13,5 @@
 
 
 [Макет приложения в фигма](https://www.figma.com/file/GDwYFow0I1r3vZqKhDDVSz/YandexParcticumChat?node-id=0%3A1)
+
+[Ссылка на pull request](https://github.com/iliya132/middle.messenger.praktikum.yandex/pull/1)
