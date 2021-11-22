@@ -1,0 +1,158 @@
+@import 'constant.css';
+@import '../components/components.css';
+
+@font-face {
+  font-family: Roboto;
+  src: url('../../static/fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+  font-family: Roboto-Bold;
+  src: url('../../static/fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+  font-family: Roboto-Med;
+  src: url('../../static/fonts/Roboto-Medium.ttf');
+}
+
+* {
+  font-family: Roboto;
+}
+
+.mt-1 {
+  margin-top: 1em;
+}
+
+.mt-2{
+    margin-top: 2em;
+}
+
+.mt-xl{
+  margin-top: 8em;
+}
+
+.mb-2{
+  margin-bottom: 2em;
+}
+
+.button-primary{
+  display:inline-block;
+  color:white;
+  font-size:16px;
+  background-color: $primaryColor;
+  text-decoration: none;
+  border: 1px solid #D6D6D6;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding:14px 40px;
+  border-radius: 21px;
+}
+
+.red{
+  color:red;
+}
+
+.input-group {
+  align-items: center;
+}
+
+.input-group > input {
+  display: block;
+  margin-top: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 37px;
+  width: 346px;
+  border: 1px solid $borderColor;
+  border-radius: 14px;
+  padding: 10px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.centered-container{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  min-width: 500px;
+  min-height: 460px;
+  transform: translate(-250px, -300px);
+  background-color: white;
+  filter: drop-shadow(0px 0px 55px $borderColor);
+  border-radius: 30px;
+}
+
+.centered-container > h2 {
+  font-family: Roboto;
+  font-size: 24px;
+  text-align: center;
+  font-weight: 400;
+  line-height: 28px;
+  margin-top: 39px;
+  margin-bottom: 25px;
+}
+
+.mrg-0{
+  margin: 0;
+  margin-top: 25px;
+}
+
+.mt-25p{
+  margin-top: 25px;
+}
+
+.text-silenced{
+  color:#878787;
+}
+
+.text-centered{
+  text-align: center;
+}
+
+.img-centered{
+  display: block;
+  margin: 0 auto;
+}
+
+.img-circle{
+  border-radius: 50%;
+  border: 2px solid $borderColor;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.grid{
+  display:grid;
+  
+}
+
+.c-2{
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+}
+
+.c-2-5{
+  grid-template-columns: 2fr 5fr;
+  column-gap: 30px;
+}
+
+.m-hor-2{
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.r-4{
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.small-input{
+  font-size: 16px!important;
+  line-height: 18px!important;
+  padding: 1px 10px!important;
+}
