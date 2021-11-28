@@ -1,0 +1,8 @@
+/build
+**/*.min.js
+/node_modules
+/dist
+*readme.md
+*package-lock.json
+package.json
+.eslintrc.json
