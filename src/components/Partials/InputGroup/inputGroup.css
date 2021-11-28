@@ -1,0 +1,9 @@
+.error-label{
+    color:red;
+    font-size: 16px;
+    text-align:left;
+}
+
+input[data-validation="invalid"]{
+    border:1px solid red!important;
+}
