@@ -42,14 +42,14 @@ export interface IInputGroupParams {
 }
 
 export enum AccountEvents{
-    Logout = "LOGOUT",
-    Login = "LOGIN",
-    SignUp = "SIGNUP"
+    Logout = 'LOGOUT',
+    Login = 'LOGIN',
+    SignUp = 'SIGNUP'
 }
 
 export interface contextMenuProps{
     options: contextMenuOption[]
-};
+}
 
 export interface contextMenuOption{
     name:string;

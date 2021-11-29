@@ -33,8 +33,8 @@ function renderRegisterPage() {
 function renderChatPage() {
   clearView();
   const chatPage = new ChatsPage(document.body, chatPageTestProps);
-  chatPage.eventBus().on(AccountEvents.Logout, ()=>{
-      renderLoginPage();
+  chatPage.eventBus().on(AccountEvents.Logout, () => {
+    renderLoginPage();
   });
 }
 

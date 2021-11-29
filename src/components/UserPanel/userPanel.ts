@@ -10,25 +10,24 @@ export interface IUserPanelProps {
 }
 
 export class UserPanel extends Block<IUserPanelProps> {
-    constructor(root:HTMLElement, props: IUserPanelProps) {
-        super(props, root);
-        this.eventBus().on(BlockEvents.FLOW_RENDER,()=>this._addEvents());
-        this._addEvents();
-    }
+  constructor(root:HTMLElement, props: IUserPanelProps) {
+    super(props, root);
+    this.eventBus().on(BlockEvents.FLOW_RENDER, () => this._addEvents());
+    this._addEvents();
+  }
 
-    render() {
-        console.debug('rendering userPanel');
-        let newDiv = document.createElement("div");
-        newDiv.innerHTML = templateCompiled(this.props).trim();
-        this.element.appendChild(newDiv.firstChild);
-    }
+  render() {
+    const newDiv = document.createElement('div');
+    newDiv.innerHTML = templateCompiled(this.props).trim();
+    this.element.appendChild(newDiv.firstChild as ChildNode);
+  }
 
-    _addEvents(){
-        let editProfileBtn = this.element.querySelector("#editProfile") as HTMLImageElement;
-        if(editProfileBtn){
-            editProfileBtn.addEventListener("click", ()=>{
-                this.eventBus().emit(ChatWindowEvents.userSettingsClick);
-            })
-        }
+  _addEvents() {
+    const editProfileBtn = this.element.querySelector('#editProfile') as HTMLImageElement;
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener('click', () => {
+        this.eventBus().emit(ChatWindowEvents.userSettingsClick);
+      });
     }
+  }
 }

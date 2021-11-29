@@ -1,10 +1,9 @@
+import Handlebars from 'handlebars';
+import { contextMenuProps } from '../../../types/Types';
 
-import Handlebars from "handlebars";
-import {contextMenuProps} from '../../../types/Types'
+const component = '{{>contextMenu}}';
 
-let component = "{{>contextMenu}}";
+const compiled = Handlebars.compile(component);
 
-let compiled = Handlebars.compile(component);
-
-let html = (data:contextMenuProps) => compiled(data);
+const html = (data:contextMenuProps) => compiled(data);
 export default html;

@@ -1,4 +1,4 @@
-import Handlebars from "handlebars";
+import Handlebars from 'handlebars';
 
 const template = `<div class="centered-container text-centered">
     <h2>Please login to continue</h2>

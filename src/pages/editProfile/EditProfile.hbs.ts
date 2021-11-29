@@ -1,4 +1,4 @@
-import Handlebars from "handlebars";
+import Handlebars from 'handlebars';
 
 const template = `
 <div id="editProfileContainer">
@@ -6,8 +6,7 @@ const template = `
     <div class="centered-container profile-container modal" >
         <h2>Profile settings</h2>
         <div class="mb-2">
-            <img src="{{{imgUrl}}}" id="avatar" class="img-centered img-circle clickable"
-                width="90px" height="90px">
+            <img src="{{{imgUrl}}}" id="avatar" class="img-centered img-circle clickable avatar-sm">
             <input id="file-input" type="file" name="name" style="display: none;" />
         </div>
         <form>

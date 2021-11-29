@@ -135,7 +135,7 @@
   margin-left: auto;
 }
 
-.devidor {
+.dividor {
   text-align: center;
   background-color: lightblue;
   margin: 0 auto;
@@ -169,7 +169,7 @@
   font-size: 16px;
   line-height: 19px;
   margin: 2px 9px;
-  outline: none;
+  outline: 0px solid transparent;
 }
 
 .message.devidor {
@@ -206,9 +206,9 @@
 }
 
 .bg-light {
-  background-color: #f8f8f8;
+  background-color: $lightGray;
 }
 
 .bg-white {
-  background-color: #fff;
+  background-color: white;
 }

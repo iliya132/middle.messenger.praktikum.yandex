@@ -1,9 +1,9 @@
-import Handlebars from "handlebars";
-import {IInputWithLabelParams} from '../../../types/Types'
+import Handlebars from 'handlebars';
+import { IInputWithLabelParams } from '../../../types/Types';
 
-let component = "{{>InputWithLabel}}";
+const component = '{{>InputWithLabel}}';
 
-let compiled = Handlebars.compile(component);
+const compiled = Handlebars.compile(component);
 
-let html = (data:IInputWithLabelParams) => compiled(data);
+const html = (data:IInputWithLabelParams) => compiled(data);
 export default html;
