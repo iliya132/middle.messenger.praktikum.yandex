@@ -244,11 +244,11 @@ body {
   background-color: $borderColor;
 }
 
-.hidden{
-  display:none;
+.hidden {
+  display: none;
 }
 
-.avatar-sm{
-  width:90px;
+.avatar-sm {
+  width: 90px;
   height: 90px;
 }
