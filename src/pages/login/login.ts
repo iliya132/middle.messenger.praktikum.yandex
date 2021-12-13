@@ -3,7 +3,7 @@ import { templateCompiled } from './login.tmpl.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
 import { IInputGroupParams } from '../../types/Types';
 import {
-  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneUpperLetterAndOneDigit, FormEvents, loginPageProps,
+  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, FormEvents, loginPageProps,
 } from '../../utils/constants';
 
 export enum LoginEvents{
@@ -57,7 +57,7 @@ export default class LoginPage extends Block<IInputGroupParams> {
     const passwordLabel = this.element?.querySelector('label[for="passwordField"]') as HTMLLabelElement;
 
     this._validators.loginValidator = InputValidator.configure()
-      .setErrorMessage('Login can contain only latin letters')
+      .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
       .setRegexpRule(AtLeastOneLetterAndLettersOrDigitsRegex)
       .minLen(3)
       .maxLen(15)
@@ -67,7 +67,7 @@ export default class LoginPage extends Block<IInputGroupParams> {
 
     this._validators.passwordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
-      .setErrorMessage('The password must be in Latin letters<br> and contain at least 1 capital letter and 1 lowercase letter')
+      .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
       .required()

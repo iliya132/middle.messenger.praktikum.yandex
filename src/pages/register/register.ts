@@ -1,7 +1,7 @@
 import { IInputGroupParams } from '../../types/Types';
 import Block, { BlockEvents } from '../../utils/block';
 import {
-  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneUpperLetterAndOneDigit, EmailRegex, FormEvents, OnlyLettersRegex, PhoneRegex, registerPageParams,
+  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, EmailRegex, EmailRegexDescription, FormEvents, OnlyLettersRegex, PhoneRegex, PhoneRegexDescription, registerPageParams,
 } from '../../utils/constants';
 import { templateCompiled } from './register.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
@@ -72,7 +72,7 @@ export default class RegisterPage extends Block<IInputGroupParams> {
     this._validators.push(secondNameValidator);
 
     const loginValidator = InputValidator.configure()
-      .setErrorMessage('Login can contain only latin letters')
+      .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
       .setRegexpRule(AtLeastOneLetterAndLettersOrDigitsRegex)
       .minLen(3)
       .maxLen(20)
@@ -82,7 +82,7 @@ export default class RegisterPage extends Block<IInputGroupParams> {
     this._validators.push(loginValidator);
 
     const emailValidator = InputValidator.configure()
-      .setErrorMessage('Email specified is incorrect')
+      .setErrorMessage(EmailRegexDescription)
       .setRegexpRule(EmailRegex)
       .required()
       .printErrorToLabel(this._getLabel(emailInput))
@@ -91,7 +91,7 @@ export default class RegisterPage extends Block<IInputGroupParams> {
 
     const passwordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
-      .setErrorMessage('The password must be in Latin letters<br>and contain at least 1 capital letter and 1 lowercase letter')
+      .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
       .required()
@@ -100,7 +100,7 @@ export default class RegisterPage extends Block<IInputGroupParams> {
     this._validators.push(passwordValidator);
 
     const phoneValidator = InputValidator.configure()
-      .setErrorMessage('Phone number specified is incorrect')
+      .setErrorMessage(PhoneRegexDescription)
       .setRegexpRule(PhoneRegex)
       .required()
       .printErrorToLabel(this._getLabel(phoneInput))

@@ -1,7 +1,7 @@
 import { AccountEvents, IEditProfileProps } from '../../types/Types';
 import Block, { BlockEvents } from '../../utils/block';
 import {
-  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneUpperLetterAndOneDigit, editProfileParams, EmailRegex, FormEvents, OnlyLatinLettersRegex, OnlyLettersRegex, PhoneRegex,
+  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, editProfileParams, EmailRegex, EmailRegexDescription, FormEvents, OnlyLatinLettersRegex, OnlyLatinLettersRegexDescription, OnlyLettersRegex, OnlyLettersRegexDescription, PhoneRegex, PhoneRegexDescription,
 } from '../../utils/constants';
 import { templateCompiled } from './EditProfile.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
@@ -62,7 +62,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
     // #region configure validation rules
     const firstNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
-      .setErrorMessage('First name can contain only letters')
+      .setErrorMessage(OnlyLettersRegexDescription)
       .required()
       .printErrorToLabel(this._getLabel(firstNameInput))
       .attachToInput(firstNameInput);
@@ -70,14 +70,14 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
 
     const secondNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
-      .setErrorMessage('Second name can contain only letters')
+      .setErrorMessage(OnlyLettersRegexDescription)
       .required()
       .printErrorToLabel(this._getLabel(secondNameInput))
       .attachToInput(secondNameInput);
     this._validators.push(secondNameValidator);
 
     const loginValidator = InputValidator.configure()
-      .setErrorMessage('Login can contain only latin letters')
+      .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
       .setRegexpRule(AtLeastOneLetterAndLettersOrDigitsRegex)
       .minLen(3)
       .maxLen(50)
@@ -87,7 +87,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
     this._validators.push(loginValidator);
 
     const displayNameValidator = InputValidator.configure()
-      .setErrorMessage('Login can contain only latin letters')
+      .setErrorMessage(OnlyLatinLettersRegexDescription)
       .setRegexpRule(OnlyLatinLettersRegex)
       .minLen(3)
       .maxLen(15)
@@ -97,7 +97,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
     this._validators.push(displayNameValidator);
 
     const emailValidator = InputValidator.configure()
-      .setErrorMessage('Email specified is incorrect')
+      .setErrorMessage(EmailRegexDescription)
       .setRegexpRule(EmailRegex)
       .required()
       .printErrorToLabel(this._getLabel(emailInput))
@@ -106,7 +106,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
 
     const oldPasswordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
-      .setErrorMessage('The password must be in Latin letters<br> and contain at least 1 capital letter and 1 lowercase letter')
+      .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
       .required()
@@ -116,7 +116,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
 
     const newPasswordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
-      .setErrorMessage('The password must be in Latin letters<br> and contain at least 1 capital letter and 1 lowercase letter')
+      .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
       .required()
@@ -125,7 +125,7 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
     this._validators.push(newPasswordValidator);
 
     const phoneValidator = InputValidator.configure()
-      .setErrorMessage('Phone number specified is incorrect')
+      .setErrorMessage(PhoneRegexDescription)
       .setRegexpRule(PhoneRegex)
       .required()
       .printErrorToLabel(this._getLabel(phoneInput))
