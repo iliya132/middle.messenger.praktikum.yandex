@@ -5,9 +5,7 @@ export interface IInputParams{
     placeholder:string;
     title:string;
     className:string;
-}
-export interface IInputGroupParams{
-    input: IInputParams[];
+    autocomplete?:string;
 }
 
 export interface IScript{
@@ -26,10 +24,34 @@ export interface IInputWithLabelParams{
     Id:string;
     placeHolder: string;
     className:string;
+    autocomplete?:string;
 }
 
 export interface IEditProfileProps{
     imgUrl:string;
     colOneInputs: IInputParams[];
     colTwoInputs: IInputParams[];
+}
+
+export interface IBlockMetadata{
+    props: object;
+}
+
+export interface IInputGroupParams {
+    input: IInputParams[];
+}
+
+export enum AccountEvents{
+    Logout = 'LOGOUT',
+    Login = 'LOGIN',
+    SignUp = 'SIGNUP'
+}
+
+export interface contextMenuProps{
+    options: contextMenuOption[]
+}
+
+export interface contextMenuOption{
+    name:string;
+    id:string;
 }

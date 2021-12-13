@@ -1,16 +1,16 @@
-import inputWithLabel from './InputWithLabel/inputWithLabel.hbs';
-import inputGroupTemplate from './InputGroup/inputGroup.tmpl.hbs';
-import Handlebars from 'handlebars/dist/cjs/handlebars';
-import link from './Link/link';
-import loginTemplate from "./Login/login.tmpl.hbs";
-import registerTemplate from "./Register/register.tmpl";
-import editProfileTemplate from "./EditProfile/EditProfile.hbs";
+import Handlebars from 'handlebars';
+import inputWithLabelHbs from './Partials/InputWithLabel/inputWithLabel.hbs';
+import inputGroupHbs from './Partials/InputGroup/inputGroup.tmpl.hbs';
+import contextMenuHbs from './Partials/ContextMenu/contextMenu.hbs';
+import linkHbs from './Partials/Link/link.hbs';
 
-export default function RegisterPartials(){
-    Handlebars.registerPartial("InputWithLabel", inputWithLabel);
-    Handlebars.registerPartial("InputGroup", inputGroupTemplate);
-    Handlebars.registerPartial("Link", link);
-    Handlebars.registerPartial("loginTemplate", loginTemplate);
-    Handlebars.registerPartial("registerTemplate", registerTemplate);
-    Handlebars.registerPartial("editProfileTemplate", editProfileTemplate)
+let isRegistered = false;
+export default function RegisterPartials() {
+  if (!isRegistered) {
+    Handlebars.registerPartial('InputWithLabel', inputWithLabelHbs);
+    Handlebars.registerPartial('InputGroup', inputGroupHbs);
+    Handlebars.registerPartial('Link', linkHbs);
+    Handlebars.registerPartial('ContextMenu', contextMenuHbs);
+    isRegistered = true;
+  }
 }
