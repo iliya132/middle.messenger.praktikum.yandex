@@ -1,75 +1,92 @@
-import { IInputGroupParams } from '../../types/Types';
-import Block, { BlockEvents } from '../../utils/block';
+import IUser, { SignupProps } from '../../types/Types';
+import Block from '../../utils/block';
 import {
   AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, EmailRegex, EmailRegexDescription, FormEvents, OnlyLettersRegex, PhoneRegex, PhoneRegexDescription, registerPageParams,
 } from '../../utils/constants';
 import { templateCompiled } from './register.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
+import authController from '../../controllers/authController';
+import Router from '../../utils/router';
+import { RootState } from '../../utils/store';
 
 export enum RegisterEvents {
-    Login = 'LOGIN'
+  Login = 'LOGIN'
 }
 
-export default class RegisterPage extends Block<IInputGroupParams> {
-  constructor(root: HTMLElement) {
-    super(registerPageParams, root);
-    this.eventBus().on(BlockEvents.FLOW_RENDER, () => {
-      this._enableValidation();
-      this._addEvents();
-    });
-    this._enableValidation();
-    this._addEvents();
+export default class RegisterPage extends Block<SignupProps> {
+  constructor(root: HTMLElement, props: SignupProps) {
+    super(props, root);
   }
 
-  render() {
-    if (this.element) {
-      this.element.innerHTML = templateCompiled(this.props);
+  override componentDidMount(): void {
+    console.log(JSON.stringify(this.props));
+    if (this.props.isSignedIn) {
+      Router.getInstance().go('/messenger');
     }
   }
 
-  _validators: InputValidatorConfiguration[] = [];
+  render() {
+    const root = this.getElement();
 
-  _getInput(name: string) {
-    return this.element?.querySelector(`#${name}Field`) as HTMLInputElement;
+    if (root) {
+      root.innerHTML = templateCompiled(registerPageParams);
+      this.enableValidation();
+      this.addEvents();
+    }
+    this.dispatchComponentDidMount();
   }
 
-  _getLabel(input: HTMLInputElement) {
-    return this.element?.querySelector(`label[for="${input.id}"]`) as HTMLLabelElement;
+  validators: InputValidatorConfiguration[] = [];
+
+  getInput(name: string) {
+    return this.getElement()?.querySelector(`#${name}Field`) as HTMLInputElement;
   }
 
-  _data() {
+  getLabel(input: HTMLInputElement) {
+    return this.getElement()?.querySelector(`label[for="${input?.id}"]`) as HTMLLabelElement;
+  }
+
+  stateToProps: (state: RootState) => SignupProps = (state) => ({ ...defaultSignUpUser, isSignedIn: state.auth.isSignedIn });
+
+  data(): IUser {
     return {
-      firstName: this._getInput('firstName').value,
-      secondName: this._getInput('secondName').value,
-      login: this._getInput('login').value,
-      email: this._getInput('email').value,
-      password: this._getInput('password').value,
-      phone: this._getInput('phone').value,
+      firstName: this.getInput('firstName').value,
+      secondName: this.getInput('secondName').value,
+      login: this.getInput('login').value,
+      email: this.getInput('email').value,
+      password: this.getInput('password').value,
+      phone: this.getInput('phone').value,
+      avatar: '',
+      displayName: this.getInput('secondName').value + ' ' + this.getInput('firstName').value,
+      id: 0
     };
   }
 
-  _enableValidation() {
-    const firstNameInput = this._getInput('firstName');
-    const secondNameInput = this._getInput('secondName');
-    const loginInput = this._getInput('login');
-    const emailInput = this._getInput('email');
-    const passwordInput = this._getInput('password');
-    const phoneInput = this._getInput('phone');
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public fetchData() { }
+
+  enableValidation() {
+    const firstNameInput = this.getInput('firstName');
+    const secondNameInput = this.getInput('secondName');
+    const loginInput = this.getInput('login');
+    const emailInput = this.getInput('email');
+    const passwordInput = this.getInput('password');
+    const phoneInput = this.getInput('phone');
 
     // #region configure validation rules
     const firstNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
       .required()
-      .printErrorToLabel(this._getLabel(firstNameInput))
+      .printErrorToLabel(this.getLabel(firstNameInput))
       .attachToInput(firstNameInput);
-    this._validators.push(firstNameValidator);
+    this.validators.push(firstNameValidator);
 
     const secondNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
       .required()
-      .printErrorToLabel(this._getLabel(secondNameInput))
+      .printErrorToLabel(this.getLabel(secondNameInput))
       .attachToInput(secondNameInput);
-    this._validators.push(secondNameValidator);
+    this.validators.push(secondNameValidator);
 
     const loginValidator = InputValidator.configure()
       .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
@@ -77,17 +94,17 @@ export default class RegisterPage extends Block<IInputGroupParams> {
       .minLen(3)
       .maxLen(20)
       .required()
-      .printErrorToLabel(this._getLabel(loginInput))
+      .printErrorToLabel(this.getLabel(loginInput))
       .attachToInput(loginInput);
-    this._validators.push(loginValidator);
+    this.validators.push(loginValidator);
 
     const emailValidator = InputValidator.configure()
       .setErrorMessage(EmailRegexDescription)
       .setRegexpRule(EmailRegex)
       .required()
-      .printErrorToLabel(this._getLabel(emailInput))
+      .printErrorToLabel(this.getLabel(emailInput))
       .attachToInput(emailInput);
-    this._validators.push(emailValidator);
+    this.validators.push(emailValidator);
 
     const passwordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
@@ -95,28 +112,28 @@ export default class RegisterPage extends Block<IInputGroupParams> {
       .minLen(8)
       .maxLen(40)
       .required()
-      .printErrorToLabel(this._getLabel(passwordInput))
+      .printErrorToLabel(this.getLabel(passwordInput))
       .attachToInput(passwordInput);
-    this._validators.push(passwordValidator);
+    this.validators.push(passwordValidator);
 
     const phoneValidator = InputValidator.configure()
       .setErrorMessage(PhoneRegexDescription)
       .setRegexpRule(PhoneRegex)
       .required()
-      .printErrorToLabel(this._getLabel(phoneInput))
+      .printErrorToLabel(this.getLabel(phoneInput))
       .attachToInput(phoneInput);
-    this._validators.push(phoneValidator);
+    this.validators.push(phoneValidator);
     // #endregion
   }
 
-  _addEvents() {
-    const loginLink = this.element?.querySelector('#Login');
-    const signUpForm = this.element?.querySelector('form');
-    this.eventBus().on(FormEvents.Submit, () => this._handleSubmit());
+  addEvents() {
+    const loginLink = this.getElement()?.querySelector('#Login');
+    const signUpForm = this.getElement()?.querySelector('form');
+    this.eventBus().on(FormEvents.Submit, () => this.handleSubmit());
 
     loginLink?.addEventListener('click', () => this.eventBus().emit(RegisterEvents.Login));
     signUpForm?.addEventListener('submit', (event) => {
-      if (!this._validateForm()) {
+      if (!this.validateForm()) {
         console.log('Submit prevented, cause of invalid data!');
       } else {
         this.eventBus().emit(FormEvents.Submit);
@@ -125,12 +142,12 @@ export default class RegisterPage extends Block<IInputGroupParams> {
     });
   }
 
-  _handleSubmit() {
-    console.log('POST backend/account/register', JSON.stringify(this._data()));
+  handleSubmit() {
+    authController.signUp(this.data());
   }
 
-  _validateForm() {
-    for (const rule of this._validators) {
+  validateForm() {
+    for (const rule of this.validators) {
       if (!rule.validate()) {
         return false;
       }
@@ -138,3 +155,14 @@ export default class RegisterPage extends Block<IInputGroupParams> {
     return true;
   }
 }
+
+export const defaultSignUpUser: SignupProps = {
+  first_name: '',
+  second_name: '',
+  email: '',
+  login: '',
+  password: '',
+  phone: '',
+  isSignedIn: false,
+  error: '',
+};

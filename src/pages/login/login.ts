@@ -1,28 +1,27 @@
-import Block, { BlockEvents } from '../../utils/block';
+import Block from '../../utils/block';
 import { templateCompiled } from './login.tmpl.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
-import { IInputGroupParams } from '../../types/Types';
+import { LoginProps } from '../../types/Types';
 import {
-  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, FormEvents, loginPageProps,
+  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, FormEvents, loginPageProps as loginInputFields,
 } from '../../utils/constants';
+import Router from '../../utils/router';
+import authController from '../../controllers/authController';
+import chatController from '../../controllers/chatController';
+import { RootState } from '../../utils/store';
 
-export enum LoginEvents{
-    SignUp = 'SIGN_UP'
+export enum LoginEvents {
+  SignUp = 'SIGN_UP'
 }
 
-export default class LoginPage extends Block<IInputGroupParams> {
-  constructor(root: HTMLElement) {
-    super(loginPageProps, root);
-    this.eventBus().on(BlockEvents.FLOW_RENDER, () => {
-      this._enableValidation();
-      this._addEvents();
-    });
-    this._enableValidation();
-    this._addEvents();
+export default class LoginPage extends Block<LoginProps> {
+
+  constructor(root: HTMLElement, props: LoginProps) {
+    super(props, root);
   }
 
   _passwordInput() {
-    return this.element?.querySelector('#passwordField') as HTMLInputElement;
+    return this.getElement()?.querySelector('#passwordField') as HTMLInputElement;
   }
 
   _passwordValue() {
@@ -30,7 +29,7 @@ export default class LoginPage extends Block<IInputGroupParams> {
   }
 
   _loginInput() {
-    return this.element?.querySelector('#loginField') as HTMLInputElement;
+    return this.getElement()?.querySelector('#loginField') as HTMLInputElement;
   }
 
   _loginValue() {
@@ -38,23 +37,35 @@ export default class LoginPage extends Block<IInputGroupParams> {
   }
 
   render() {
-    if (this.element) {
-      this.element.innerHTML = templateCompiled(this.props);
+    const el = this.getElement();
+    if (el) {
+      const templateValues = { ...loginInputFields, error: this.props.error };
+      el.innerHTML = templateCompiled(templateValues);
+      this._enableValidation();
+      this._addEvents();
     }
   }
 
+  fetchData(): void {
+    authController.getUser().then((response) => {
+      if (!response.error) {
+        Router.getInstance().go('/messenger');
+      }
+    });
+  }
+
   _validators: {
-        loginValidator: InputValidatorConfiguration | null,
-        passwordValidator: InputValidatorConfiguration | null
-    } = {
+    loginValidator: InputValidatorConfiguration | null,
+    passwordValidator: InputValidatorConfiguration | null
+  } = {
       loginValidator: null, passwordValidator: null,
     };
 
   _enableValidation() {
     const loginInput = this._loginInput();
     const passwordInput = this._passwordInput();
-    const loginLabel = this.element?.querySelector('label[for="loginField"]') as HTMLLabelElement;
-    const passwordLabel = this.element?.querySelector('label[for="passwordField"]') as HTMLLabelElement;
+    const loginLabel = this.getElement()?.querySelector('label[for="loginField"]') as HTMLLabelElement;
+    const passwordLabel = this.getElement()?.querySelector('label[for="passwordField"]') as HTMLLabelElement;
 
     this._validators.loginValidator = InputValidator.configure()
       .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
@@ -75,19 +86,18 @@ export default class LoginPage extends Block<IInputGroupParams> {
       .attachToInput(passwordInput);
   }
 
+  stateToProps: (state: RootState) => LoginProps = (state) => ({ ...loginDefaultProps, isSignedIn: state.auth.isSignedIn, error: state.auth.error });
+
   _addEvents() {
-    const loginForm = this.element?.querySelector('form');
-    const signUpLink = this.element?.querySelector('#signUpLink');
+    const loginForm = this.getElement()?.querySelector('form');
+    const signUpLink = this.getElement()?.querySelector('#signUpLink');
     this.eventBus().on(FormEvents.Submit, () => this._handleSubmit());
 
     signUpLink?.addEventListener('click', () => {
       this.eventBus().emit(LoginEvents.SignUp);
     });
-
     loginForm?.addEventListener('submit', (event) => {
-      if (!this._validateForm()) {
-        console.log('Submit prevented, cause of invalid data!');
-      } else {
+      if (this._validateForm()) {
         this.eventBus().emit(FormEvents.Submit);
       }
       event.preventDefault();
@@ -95,8 +105,16 @@ export default class LoginPage extends Block<IInputGroupParams> {
   }
 
   _handleSubmit() {
-    console.log('POST backend/account/login', JSON.stringify({ login: this._loginValue(), password: this._passwordValue() }));
+    authController.signIn(this._loginValue(), this._passwordValue()).then(() => {
+      chatController.featchChats();
+      Router.getInstance().go('/messenger');
+    }).catch((response) => {
+      console.error('Error occurred while trying to login: ', response);
+    });
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected componentDidMount(): void { }
 
   _validateForm() {
     if (!this._validators.loginValidator || !this._validators.loginValidator.validate()) {
@@ -108,3 +126,10 @@ export default class LoginPage extends Block<IInputGroupParams> {
     return true;
   }
 }
+
+export const loginDefaultProps: LoginProps = {
+  login: '',
+  password: '',
+  isSignedIn: false,
+  error: '',
+};

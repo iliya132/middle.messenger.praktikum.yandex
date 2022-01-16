@@ -1,12 +1,11 @@
-export enum METHODS{
-    GET= 'GET',
-    PUT= 'PUT',
-    POST= 'POST',
-    DELETE= 'DELETE'
-  }
+export enum METHODS {
+  GET = 'GET',
+  PUT = 'PUT',
+  POST = 'POST',
+  DELETE = 'DELETE'
+}
 
-function queryStringify(data:Document | XMLHttpRequestBodyInit | null) {
-  // Можно делать трансформацию GET-параметров в отдельной функции
+function queryStringify(data: Document | XMLHttpRequestBodyInit | null) {
   let result = '';
   if (data) {
     result += '?';
@@ -18,23 +17,27 @@ function queryStringify(data:Document | XMLHttpRequestBodyInit | null) {
   return result;
 }
 
-  interface HttpOptions{
-      data: Document | XMLHttpRequestBodyInit | null,
-      method: METHODS,
-      timeout: number,
-      headers: object
-  }
+interface HttpOptions {
+  data: Document | XMLHttpRequestBodyInit | null,
+  method: METHODS,
+  timeout: number,
+  headers: object
+}
 
 export default class HTTPTransport {
-  get = (url:string, options :HttpOptions) => this.request(url + queryStringify(options.data), { ...options, method: METHODS.GET }, options.timeout);
+  get = (url: string, options: HttpOptions) =>
+    this.request(url + queryStringify(options.data), { ...options, method: METHODS.GET }, options.timeout);
 
-  put = (url:string, options :HttpOptions) => this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
+  put = (url: string, options: HttpOptions) =>
+    this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
 
-  post = (url:string, options :HttpOptions) => this.request(url, { ...options, method: METHODS.POST }, options.timeout);
+  post = (url: string, options: HttpOptions) =>
+    this.request(url, { ...options, method: METHODS.POST }, options.timeout);
 
-  delete = (url:string, options :HttpOptions) => this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
+  delete = (url: string, options: HttpOptions) =>
+    this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
 
-  request = (url:string, options :HttpOptions, timeout = 5000) => {
+  request = (url: string, options: HttpOptions, timeout = 5000) => {
     const { method, data, headers } = options;
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -46,7 +49,8 @@ export default class HTTPTransport {
           xhr.setRequestHeader(header[0], header[1]);
         }
       }
-
+      
+      xhr.timeout = timeout;
       xhr.onabort = reject;
       xhr.onerror = reject;
       xhr.ontimeout = reject;

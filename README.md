@@ -8,6 +8,14 @@
 
 `npm run start`
 
+Сборка проекта:
+
+`npm run construct`
+
+Запуск тестов:
+
+`npm run test`
+
 
 [Ссылка на приложение](https://practicumhomework.netlify.app/)
 

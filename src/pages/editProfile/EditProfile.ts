@@ -1,80 +1,168 @@
 import { AccountEvents, IEditProfileProps } from '../../types/Types';
-import Block, { BlockEvents } from '../../utils/block';
+import Block from '../../utils/block';
 import {
-  AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, editProfileParams, EmailRegex, EmailRegexDescription, FormEvents, OnlyLatinLettersRegex, OnlyLatinLettersRegexDescription, OnlyLettersRegex, OnlyLettersRegexDescription, PhoneRegex, PhoneRegexDescription,
+  AtLeastOneLetterAndLettersOrDigitsRegex,
+  AtLeastOneLetterAndLettersOrDigitsRegexDescription,
+  AtLeastOneUpperLetterAndOneDigit,
+  AtLeastOneUpperLetterAndOneDigitDescription,
+  editProfileParams,
+  EmailRegex,
+  EmailRegexDescription,
+  FormEvents,
+  OnlyLatinLettersOrSpaceRegex,
+  OnlyLatinLettersOrSpaceRegexDescription,
+  OnlyLettersRegex,
+  OnlyLettersRegexDescription,
+  PhoneRegex,
+  PhoneRegexDescription,
 } from '../../utils/constants';
 import { templateCompiled } from './EditProfile.hbs';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
+import Router from '../../utils/router';
+import authController from '../../controllers/authController';
+import userController from '../../controllers/userController';
+import { RootState } from '../../utils/store';
 
 export default class EditProfilePage extends Block<IEditProfileProps> {
-  constructor(root: HTMLElement) {
-    super(editProfileParams, root);
-    this.eventBus().on(BlockEvents.FLOW_RENDER, () => {
-      this._enableValidation();
-      this._addEvents();
-    });
-    this._enableValidation();
-    this._addEvents();
-    this._container = this.element?.querySelector('#editProfileContainer') as HTMLDivElement;
+  constructor(root: HTMLElement, props: IEditProfileProps) {
+    super(props, root);
   }
 
   render() {
+    const root = this.getElement();
+    if (!root) {
+      return;
+    }
+    const templateParams = editProfileParams;
+    if (this.props.avatar) {
+      templateParams.imgUrl = this.props.avatar;
+    }
     const newDiv = document.createElement('div');
-    newDiv.innerHTML = templateCompiled(this.props).trim();
-    this.element?.appendChild(newDiv.firstChild as ChildNode);
+    newDiv.innerHTML = templateCompiled(editProfileParams).trim();
+    if (window.location.pathname === '/settings') {
+      const cancelBtn = newDiv.querySelector('#cancelBtn');
+      if (cancelBtn) {
+        cancelBtn.textContent = 'Back';
+        cancelBtn.addEventListener('click', () => {
+          Router.getInstance().back();
+        });
+      }
+      root.innerHTML = '';
+    }
+    root.appendChild(newDiv.firstChild as ChildNode);
+    this.setInputValues();
+    this.enableValidationReal();
+    this.addEventsReal();
   }
 
-  _container: HTMLDivElement;
-
-  _validators: InputValidatorConfiguration[] = [];
-
-  _getInput(name: string) {
-    return this.element?.querySelector(`#${name}Field`) as HTMLInputElement;
+  private asString(str: string): string {
+    return str ? str as string : '';
   }
 
-  _getLabel(input: HTMLInputElement) {
-    return this.element?.querySelector(`label[for="${input.id}"]`) as HTMLLabelElement;
+  private setInputValues() {
+    if (this.getInputReal('firstName')) {
+      this.getInputReal('firstName').value = this.asString(this.props.firstName);
+    }
+    if (this.getInputReal('secondName')) {
+      this.getInputReal('secondName').value = this.asString(this.props.secondName);
+    }
+    if (this.getInputReal('displayName')) {
+      this.getInputReal('displayName').value = this.asString(this.props.displayName);
+    }
+    if (this.getInputReal('login')) {
+      this.getInputReal('login').value = this.asString(this.props.login);
+    }
+    if (this.getInputReal('email')) {
+      this.getInputReal('email').value = this.asString(this.props.email);
+    }
+    if (this.getInputReal('displayName')) {
+      this.getInputReal('displayName').value = this.asString(this.props.displayName);
+    }
+    if (this.getInputReal('phone')) {
+      this.getInputReal('phone').value = this.asString(this.props.phone);
+    }
   }
 
-  _data() {
+  containerReal: HTMLDivElement;
+
+  container() {
+    if (!this.containerReal) {
+      this.containerReal = this.getElement()?.querySelector('#editProfileContainer') as HTMLDivElement;
+    }
+    return this.containerReal;
+  }
+
+  fetchData(): void {
+    if (window.location.pathname === '/settings') {
+      authController.getUser().then((currentUser) => {
+        const newProps: IEditProfileProps = {
+          avatar: currentUser.user?.avatar ?? '',
+          displayName: currentUser.user?.displayName ?? '',
+          email: currentUser.user?.email ?? '',
+          firstName: currentUser.user?.firstName ?? '',
+          login: currentUser.user?.login ?? '',
+          newPassword: '',
+          oldPassword: '',
+          phone: currentUser.user?.phone ?? '',
+          secondName: currentUser.user?.secondName ?? '',
+          error: currentUser.error as string,
+        };
+        this.setProps(newProps);
+      });
+    }
+  }
+
+  validatorsReal: InputValidatorConfiguration[] = [];
+
+  getInputReal(name: string) {
+    return this.getElement()?.querySelector(`#${name}Field`) as HTMLInputElement;
+  }
+
+  getLabelReal(input: HTMLInputElement) {
+    return this.getElement()?.querySelector(`label[for="${input?.id}"]`) as HTMLLabelElement;
+  }
+
+  dataReal(): IEditProfileProps {
     return {
-      firstName: this._getInput('firstName').value,
-      secondName: this._getInput('secondName').value,
-      login: this._getInput('login').value,
-      email: this._getInput('email').value,
-      displayName: this._getInput('displayName').value,
-      oldPassword: this._getInput('oldPassword').value,
-      newPassword: this._getInput('newPassword').value,
-      phone: this._getInput('phone').value,
+      firstName: this.getInputReal('firstName').value,
+      secondName: this.getInputReal('secondName').value,
+      login: this.getInputReal('login').value,
+      email: this.getInputReal('email').value,
+      displayName: this.getInputReal('displayName').value,
+      oldPassword: this.getInputReal('oldPassword').value,
+      newPassword: this.getInputReal('newPassword').value,
+      phone: this.getInputReal('phone').value,
+      avatar: '',
+      error: '',
     };
   }
 
-  _enableValidation() {
-    const firstNameInput = this._getInput('firstName');
-    const secondNameInput = this._getInput('secondName');
-    const loginInput = this._getInput('login');
-    const emailInput = this._getInput('email');
-    const displayNameInput = this._getInput('displayName');
-    const oldPasswordInput = this._getInput('oldPassword');
-    const newPasswordInput = this._getInput('newPassword');
-    const phoneInput = this._getInput('phone');
+  enableValidationReal() {
+    const firstNameInput = this.getInputReal('firstName');
+    const secondNameInput = this.getInputReal('secondName');
+    const loginInput = this.getInputReal('login');
+    const emailInput = this.getInputReal('email');
+    const displayNameInput = this.getInputReal('displayName');
+    const oldPasswordInput = this.getInputReal('oldPassword');
+    const newPasswordInput = this.getInputReal('newPassword');
+    const phoneInput = this.getInputReal('phone');
 
     // #region configure validation rules
     const firstNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
       .setErrorMessage(OnlyLettersRegexDescription)
       .required()
-      .printErrorToLabel(this._getLabel(firstNameInput))
+      .printErrorToLabel(this.getLabelReal(firstNameInput))
       .attachToInput(firstNameInput);
-    this._validators.push(firstNameValidator);
+    this.validatorsReal.push(firstNameValidator);
 
     const secondNameValidator = InputValidator.configure()
       .setRegexpRule(OnlyLettersRegex)
       .setErrorMessage(OnlyLettersRegexDescription)
       .required()
-      .printErrorToLabel(this._getLabel(secondNameInput))
+      .printErrorToLabel(this.getLabelReal(secondNameInput))
       .attachToInput(secondNameInput);
-    this._validators.push(secondNameValidator);
+    this.validatorsReal.push(secondNameValidator);
 
     const loginValidator = InputValidator.configure()
       .setErrorMessage(AtLeastOneLetterAndLettersOrDigitsRegexDescription)
@@ -82,73 +170,82 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
       .minLen(3)
       .maxLen(50)
       .required()
-      .printErrorToLabel(this._getLabel(loginInput))
+      .printErrorToLabel(this.getLabelReal(loginInput))
       .attachToInput(loginInput);
-    this._validators.push(loginValidator);
+    this.validatorsReal.push(loginValidator);
 
     const displayNameValidator = InputValidator.configure()
-      .setErrorMessage(OnlyLatinLettersRegexDescription)
-      .setRegexpRule(OnlyLatinLettersRegex)
+      .setErrorMessage(OnlyLatinLettersOrSpaceRegexDescription)
+      .setRegexpRule(OnlyLatinLettersOrSpaceRegex)
       .minLen(3)
       .maxLen(15)
       .required()
-      .printErrorToLabel(this._getLabel(displayNameInput))
+      .printErrorToLabel(this.getLabelReal(displayNameInput))
       .attachToInput(displayNameInput);
-    this._validators.push(displayNameValidator);
+    this.validatorsReal.push(displayNameValidator);
 
     const emailValidator = InputValidator.configure()
       .setErrorMessage(EmailRegexDescription)
       .setRegexpRule(EmailRegex)
       .required()
-      .printErrorToLabel(this._getLabel(emailInput))
+      .printErrorToLabel(this.getLabelReal(emailInput))
       .attachToInput(emailInput);
-    this._validators.push(emailValidator);
+    this.validatorsReal.push(emailValidator);
 
     const oldPasswordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
       .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
-      .required()
-      .printErrorToLabel(this._getLabel(oldPasswordInput))
+      .printErrorToLabel(this.getLabelReal(oldPasswordInput))
       .attachToInput(oldPasswordInput);
-    this._validators.push(oldPasswordValidator);
+    this.validatorsReal.push(oldPasswordValidator);
 
     const newPasswordValidator = InputValidator.configure()
       .setRegexpRule(AtLeastOneUpperLetterAndOneDigit)
       .setErrorMessage(AtLeastOneUpperLetterAndOneDigitDescription)
       .minLen(8)
       .maxLen(40)
-      .required()
-      .printErrorToLabel(this._getLabel(newPasswordInput))
+      .printErrorToLabel(this.getLabelReal(newPasswordInput))
       .attachToInput(newPasswordInput);
-    this._validators.push(newPasswordValidator);
+    this.validatorsReal.push(newPasswordValidator);
 
     const phoneValidator = InputValidator.configure()
       .setErrorMessage(PhoneRegexDescription)
       .setRegexpRule(PhoneRegex)
       .required()
-      .printErrorToLabel(this._getLabel(phoneInput))
+      .printErrorToLabel(this.getLabelReal(phoneInput))
       .attachToInput(phoneInput);
-    this._validators.push(phoneValidator);
+    this.validatorsReal.push(phoneValidator);
     // #endregion
   }
 
-  _addEvents() {
-    const form = this.element?.querySelector('form');
-    const logoutLink = this.element?.querySelector('#logout');
-    const fileInput = this.element?.querySelector('#file-input') as HTMLInputElement;
-    const cancelBtn = this.element?.querySelector('#cancelBtn');
-    const avatarImg = this.element?.querySelector('#avatar');
-    avatarImg?.addEventListener('click', () => fileInput.click());
+  stateToProps: (state: RootState) => IEditProfileProps = (state) => ({ ...this.props, ...state.auth.user });
+
+  addEventsReal() {
+    const form = this.getElement()?.querySelector('#profileForm');
+    const logoutLink = this.getElement()?.querySelector('#logout');
+    const fileInput = this.getElement()?.querySelector('#file-input') as HTMLInputElement;
+    const cancelBtn = this.getElement()?.querySelector('#cancelBtn');
+    const avatarImg = this.getElement()?.querySelector('#avatar');
+    const avatarForm = document.getElementById('avatarForm') as HTMLFormElement;
+    avatarImg?.addEventListener('click', () => {
+      fileInput.click();
+    });
+    fileInput.addEventListener('change', () => {
+      const form = new FormData(avatarForm);
+      userController.changeAvatar(form).then(() => {
+        authController.fetchUser();
+      });
+    });
     cancelBtn?.addEventListener('click', () => { this.eventBus().emit(FormEvents.Cancel); });
     logoutLink?.addEventListener('click', () => this.eventBus().emit(AccountEvents.Logout));
-    this.eventBus().on(FormEvents.Submit, () => this._handleSubmit());
-    this.eventBus().on(AccountEvents.Logout, () => this._handleLogout());
+    this.eventBus().on(FormEvents.Submit, () => this.handleSubmit());
+    this.eventBus().on(AccountEvents.Logout, () => this.handleLogout());
 
     form?.addEventListener('submit', (event) => {
       event.preventDefault();
-      if (!this._validateForm()) {
+      if (!this.validateForm()) {
         this.eventBus().emit(FormEvents.ValidationFailure);
       } else {
         this.eventBus().emit(FormEvents.ValidationSucceed);
@@ -157,16 +254,40 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
     });
   }
 
-  _handleSubmit() {
-    console.log('POST backend/account/editProfile', JSON.stringify(this._data()));
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected componentDidMount(): void { }
+
+  private handleSubmit() {
+    const submittedData = this.dataReal();
+    if (this.isPasswordChanged(submittedData)) {
+      userController.changePassword(submittedData.oldPassword, submittedData.newPassword);
+      return;
+    }
+    if (this.isChangesWasMade(submittedData)) {
+      userController.changeProfile(submittedData);
+    }
   }
 
-  _handleLogout() {
+  private isPasswordChanged(data: IEditProfileProps): boolean {
+    return !!data.newPassword;
+  }
+
+  private isChangesWasMade(data: IEditProfileProps): boolean {
+    const currentData = this.props;
+    return currentData.displayName !== data.displayName
+      || currentData.email !== data.email
+      || currentData.firstName !== data.firstName
+      || currentData.secondName !== data.secondName
+      || currentData.login !== data.login
+      || currentData.phone !== data.phone;
+  }
+
+  private handleLogout() {
     console.log('GET backend/account/logout');
   }
 
-  _validateForm() {
-    for (const rule of this._validators) {
+  private validateForm() {
+    for (const rule of this.validatorsReal) {
       if (!rule.validate()) {
         return false;
       }
@@ -175,10 +296,10 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
   }
 
   show(): void {
-    this._container.style.display = 'block';
+    this.container().style.display = 'block';
   }
 
   hide(): void {
-    this._container.style.display = 'none';
+    this.container().style.display = 'none';
   }
 }
