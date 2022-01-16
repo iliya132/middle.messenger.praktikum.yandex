@@ -51,7 +51,6 @@ class AuthController extends BasicController {
 
   async fetchUser() {
     const newState = await this.getUser();
-    console.log('NEW STATE!!!', newState);
     this.changeState(this.controllerStatePath, newState);
   }
 

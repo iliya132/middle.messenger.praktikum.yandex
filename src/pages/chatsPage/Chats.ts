@@ -63,8 +63,6 @@ export class ChatsPage extends Block<IChatsProps> {
 
   private renderActiveChat(root: HTMLElement) {
     if (this.props.activeChat) {
-      console.log('CHAT PROPS: ', this.props.chats);
-      console.log('ACTIVE CHAT: ', this.props.activeChat);
       const activeChat = this.props.chats.filter((i) => i.id === this.props.activeChat)[0];
       if (activeChat) {
         const activeChatProps: IUserPanelProps = { ...defaultActiveChatPanelState, avatarSrc: activeChat.avatar ? activeChat.avatar : defaultAvatarSrc, userName: activeChat.title, showMoreSrc: '' }
@@ -140,13 +138,10 @@ export class ChatsPage extends Block<IChatsProps> {
   }
 
   public override fetchData(): void {
-    console.log(store.getState());
     if (!store.getState()){
       return;
     }
-    console.log('fetching chat data');
     if (!store.getState().auth.isSignedIn) {
-      console.log('fetching user');
       authController.fetchUser();
     }
     chatController.featchChats();
