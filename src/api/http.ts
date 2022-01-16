@@ -124,7 +124,7 @@ export default class HTTPTransport {
       if (method === Method.Get || !data) {
         xhr.send();
       } else {
-        xhr.send(JSON.stringify(data));
+        xhr.send(data as Document | XMLHttpRequestBodyInit | null | undefined);
       }
     });
   }

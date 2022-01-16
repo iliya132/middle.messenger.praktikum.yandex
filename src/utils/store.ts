@@ -51,7 +51,6 @@ export default class Store {
 
   setState(path: string, value: unknown) {
     const newValue = set(this.state, path, value) as RootState;
-    console.log('new state: ', newValue);
     if (!isEqual(this.state, newValue)) {
       this.state = newValue;
       this.eventBus().emit(StoreEvents.changed);

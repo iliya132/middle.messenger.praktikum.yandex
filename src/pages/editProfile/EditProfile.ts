@@ -282,9 +282,8 @@ export default class EditProfilePage extends Block<IEditProfileProps> {
       || currentData.phone !== data.phone;
   }
 
-  private handleLogout() {
-    console.log('GET backend/account/logout');
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private handleLogout() {}
 
   private validateForm() {
     for (const rule of this.validatorsReal) {

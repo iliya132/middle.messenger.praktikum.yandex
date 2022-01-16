@@ -43,7 +43,6 @@ class ChatController extends BasicController {
       activeChat: 0,
        messages: []
     };
-    console.log('change state!!');
     this.changeState(this.controllerStatePath, model);
   }
 
