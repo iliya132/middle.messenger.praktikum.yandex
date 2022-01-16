@@ -1,37 +1,34 @@
-class EventBus {
-  listeners: {};
+export type Listener<T extends unknown[] = unknown[]> = (...args: T) => void;
 
-  constructor() {
-    this.listeners = {};
-  }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default class EventBus<E extends string = string, M extends { [K in E]: unknown[] } = Record<E, any>> {
+  private listeners: { [key in E]?: Listener<M[E]>[] } = {}
 
-  on(event: string, callback: (args?:unknown[]) => void) {
+  on(event: E, callback: Listener<M[E]>) {
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
-
-    this.listeners[event].push(callback);
+      this.listeners[event]?.push(callback);
   }
 
-  off(event: string, callback: () => void) {
+  off(event: E, callback: Listener<M[E]>) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`);
     }
 
-    this.listeners[event] = this.listeners[event].filter(
-      (listener) => listener !== callback,
+    this.listeners[event] = this.listeners[event]?.filter(
+      listener => listener !== callback,
     );
   }
 
-  emit(event: string, ...args: unknown[]) {
+  emit(event: E, ...args: M[E]) {
+
     if (!this.listeners[event]) {
       return;
     }
-
-    this.listeners[event].forEach((listener) => {
+    
+    this.listeners[event]?.forEach(listener => {
       listener(...args);
     });
   }
 }
-
-export default EventBus;
