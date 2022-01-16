@@ -1,8 +1,8 @@
-import Handlebars from "handlebars";
+import Handlebars from 'handlebars';
 
 const template = `
     <div class="new-message">
-        <input type="text" id="message" class="message-input" placeholder="Type message here" name="message">
+        <input type="text" id="message" class="message-input" placeholder="Type message here" name="message" autocomplete="new-password">
         <button class="send-btn" title="send" id="send-new-message-btn">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 viewBox="0 0 16 16">

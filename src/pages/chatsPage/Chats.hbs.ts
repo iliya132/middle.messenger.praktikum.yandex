@@ -1,4 +1,4 @@
-import Handlebars from "handlebars";
+import Handlebars from 'handlebars';
 
 const template = `
 <div class="h100 bg-light">

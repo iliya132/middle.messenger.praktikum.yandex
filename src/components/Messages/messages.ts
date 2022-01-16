@@ -1,30 +1,40 @@
+import { IMessage, IMessagesProps } from '../../types/Types';
 import Block from '../../utils/block';
-import {templateCompiled} from './messages.hbs';
-
-export enum MessageType{
-    Incoming = "message incoming",
-    Outgoing = "message outgoing",
-    Devidor = "devidor"
-}
-
-export interface IMessage {
-    content: string;
-    createdAt: Date;
-    type: MessageType;
-}
-
-export interface IMessagesProps {
-    messages: IMessage[];
-}
+import { RootState } from '../../utils/store';
+import { templateCompiled } from './messages.hbs';
 
 export class Messages extends Block<IMessagesProps> {
-    constructor(root: HTMLElement, props: IMessagesProps) {
-        super(props, root);
-    }
 
-    render() {
-        let newDiv = document.createElement("div");
-        newDiv.innerHTML = templateCompiled(this.props).trim();
-        this.element.appendChild(newDiv.firstChild);
+  constructor(root: HTMLElement, props: IMessagesProps) {
+    super(props, root);
+  }
+
+  render() {
+    const newDiv = document.createElement('div');
+    const state: IMessagesProps = {
+      error: this.props.error,
+      messages: this.sortMessages(this.props.messages) ?? [],
+    };
+
+    newDiv.innerHTML = templateCompiled(state).trim();
+    this.getElement()?.appendChild(newDiv.firstChild as ChildNode);
+  }
+
+  stateToProps: (state: RootState) => IMessagesProps = (state) => ({ ...this.props, ...state.chats.messages });
+
+  private sortMessages(messages: IMessage[]) {
+    if (!messages || messages.length === 0) {
+      return null;
     }
+    try {
+      return messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    } catch (exception) {
+      return null;
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected componentDidMount(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public fetchData(): void {}
 }

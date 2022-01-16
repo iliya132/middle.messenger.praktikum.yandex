@@ -1,136 +1,132 @@
 import EventBus from './eventBus';
-import { IBlockMetadata } from '../types/Types';
+import { IProps } from '../types/Types';
+import isEqual from './isEqual';
+import { RootState } from './store';
 
 export enum BlockEvents {
-    INIT = "init",
-    FLOW_CDM = "flow:component-did-mount",
-    FLOW_CDU = "flow:component-did-update",
-    FLOW_RENDER = "flow:render"
+  INIT = 'init',
+  FLOW_CDM = 'flow:component-did-mount',
+  FLOW_CDU = 'flow:component-did-update',
+  FLOW_RENDER = 'flow:render'
 }
 
-export default abstract class Block<TPropsType extends object> {
+export default abstract class Block<TPropsType extends IProps> {
+  private root: HTMLElement | null = null;
 
-    _root: HTMLElement = null;
-    _meta: IBlockMetadata = null;
-    eventBus: () => EventBus;
-    props: TPropsType;
+  eventBus: () => EventBus;
 
-    constructor(props:TPropsType, root: HTMLElement) {
-        const eventBus = new EventBus();
-        this._meta = {
-            props
-        };
-        this._root = root;
+  public props: TPropsType;
 
+  constructor(props: TPropsType, root: HTMLElement) {
+    const eventBus = new EventBus();
+    this.root = root;
+    this.props = this.makePropsProxy(props);
 
-        this.props = this._makePropsProxy(props);
+    this.eventBus = () => eventBus;
 
-        this.eventBus = () => eventBus;
+    this.registerEvents(eventBus);
+    eventBus.emit(BlockEvents.INIT);
+  }
 
-        this._registerEvents(eventBus);
-        eventBus.emit(BlockEvents.INIT);
+  private registerEvents(eventBus: EventBus) {
+    eventBus.on(BlockEvents.FLOW_CDM, this.componentDidMountReal.bind(this));
+    eventBus.on(BlockEvents.FLOW_CDU, this.componentDidUpdateReal.bind(this));
+    eventBus.on(BlockEvents.FLOW_RENDER, this.renderReal.bind(this));
+  }
+
+  private componentDidMountReal() {
+    this.componentDidMount();
+  }
+
+  protected abstract componentDidMount(): void;
+
+  protected dispatchComponentDidMount() {
+    this.eventBus().emit(BlockEvents.FLOW_CDM);
+  }
+
+  private componentDidUpdateReal(oldProps: object, newProps: object) {
+    const response = this.componentDidUpdate(oldProps, newProps);
+    if (response) {
+      this.eventBus().emit(BlockEvents.FLOW_RENDER);
     }
+  }
 
-    private _registerEvents(eventBus: EventBus) {
-        eventBus.on(BlockEvents.INIT, this.init.bind(this));
-        eventBus.on(BlockEvents.FLOW_CDM, this._componentDidMount.bind(this));
-        eventBus.on(BlockEvents.FLOW_CDU, this._componentDidUpdate.bind(this));
-        eventBus.on(BlockEvents.FLOW_RENDER, this._render.bind(this));
+  protected componentDidUpdate(oldProps: object, newProps: object) {
+    
+    return !isEqual(oldProps, newProps);
+  }
+
+  abstract stateToProps: (state: RootState) => TPropsType;
+
+  setProps = (nextProps: object) => {
+    if (!nextProps) {
+      return;
     }
+    Object.assign(this.props, nextProps);
+  };
 
-    private _createResources() {}
+  protected getElement() {
+    return this.root;
+  }
 
-    init() {
-        this._createResources();
-        this.eventBus().emit(BlockEvents.FLOW_RENDER);
-        this.eventBus().emit(BlockEvents.FLOW_CDM);
+  private renderReal() {
+    this.render();
+  }
+
+  abstract render(): void;
+
+  getContent() {
+    const elem = this.getElement();
+    if (elem) {
+      return elem.innerHTML;
     }
+    return null;
+  }
 
-    private _componentDidMount() {
-        this.componentDidMount();
-    }
+  public abstract fetchData(): void;
 
-    // Может переопределять пользователь, необязательно трогать
-    componentDidMount(oldProps?: object) { }
-
-    dispatchComponentDidMount() {
-        this.eventBus().emit(BlockEvents.FLOW_CDM);
-    }
-
-    private _componentDidUpdate(oldProps: object, newProps: object) {
-        const response = this.componentDidUpdate(oldProps, newProps);
-        if (response) {
-            this.eventBus().emit(BlockEvents.FLOW_RENDER);
+  private makePropsProxy(props: TPropsType): TPropsType {
+    const proxyProps = new Proxy(props, {
+      get(target: TPropsType, props: string) {
+        if (typeof props !== 'string') {
+          return target;
         }
-    }
-
-    // Может переопределять пользователь, необязательно трогать
-    componentDidUpdate(oldProps: object, newProps: object) {
-        if (oldProps === newProps) {
-            return false;
+        if (props.indexOf('_') === 0) {
+          throw new Error('Приватное свойство недоступно');
         }
+        if(Object.prototype.hasOwnProperty.call(target, props)){
+          return target[props as keyof TPropsType];
+        }
+      },
+      set: (target: TPropsType, props: string, value: unknown) => {
+        if (props.indexOf('_') === 0) {
+          throw new Error('Приватное свойство недоступно');
+        }
+        if(!Object.prototype.hasOwnProperty.call(target, props)){
+            throw new Error('Свойство ' + props + ' не найдено');
+        }
+        const oldValue = target[props as keyof TPropsType];
+
+        target[props as keyof TPropsType] = value as typeof oldValue;
+        this.eventBus().emit(BlockEvents.FLOW_CDU, oldValue, value);
         return true;
+      },
+      deleteProperty() {
+        throw new Error('нет доступа');
+      },
+    });
+    return proxyProps;
+  }
+
+  show() {
+    if (this.getElement()) {
+      (this.getElement() as HTMLElement).style.display = 'block';
     }
+  }
 
-    setProps = (nextProps: object) => {
-        if (!nextProps) {
-            return;
-        }
-        Object.assign(this.props, nextProps);
-    };
-
-    get element() {
-        return this._root;
+  hide() {
+    if (this.getElement()) {
+      (this.getElement() as HTMLElement).style.display = 'none';
     }
-
-    private _render() {
-        this.render();
-    }
-
-    // Может переопределять пользователь, необязательно трогать
-    abstract render();
-
-    getContent() {
-        return this.element;
-    }
-
-    private _makePropsProxy(props: TPropsType):TPropsType {
-        // Можно и так передать this
-        // Такой способ больше не применяется с приходом ES6+
-        const self = this;
-        let proxyProps = new Proxy(props, {
-            get(target: TPropsType, props: string) {
-                if (props.indexOf('_') === 0) {
-                    throw new Error('Приватное свойство недоступно');
-                }
-                return target[props];
-            },
-            set(target: TPropsType, props: string, value: unknown) {
-                if (props.indexOf('_') === 0) {
-                    throw new Error('Приватное свойство недоступно');
-                }
-                let oldValue = target[props];
-                target[props] = value;
-                self.eventBus().emit(BlockEvents.FLOW_CDU, oldValue, value);
-                return true;
-            },
-            deleteProperty(target: TPropsType, props: string) {
-                throw new Error('нет доступа');
-            }
-        })
-        return proxyProps;
-    }
-
-    private _createDocumentElement(tagName:string) {
-        // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
-        return document.createElement(tagName);
-    }
-
-    show() {
-        this.element.style.display = 'block';
-    }
-
-    hide() {
-        this.element.style.display = 'none';
-    }
+  }
 }

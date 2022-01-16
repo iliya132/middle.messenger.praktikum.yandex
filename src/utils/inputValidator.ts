@@ -1,126 +1,133 @@
-export default class InputValidator{
-    static configure(){
-        //Можно было бы вернуть Proxy
-        return new InputValidatorConfiguration();
-    }
+export default class InputValidator {
+  static configure() {
+    // Можно было бы вернуть Proxy
+    return new InputValidatorConfiguration();
+  }
 }
 
-export class InputValidatorConfiguration{
-    _meta:{
-        regex:RegExp,
-        isRequired: boolean,
-        minLen:number,
-        maxLen:number,
-        inputElement:HTMLInputElement,
-        errorLabel:HTMLLabelElement,
-        regexpErrorMsg:string,
-        error:string;
-    } = {
-        regex:null,
-        isRequired:false,
-        minLen:0,
-        maxLen:Infinity,
-        inputElement:null,
-        errorLabel:null,
-        regexpErrorMsg:"",
-        error:""
+interface IMeta {
+  regex?: RegExp | null,
+  isRequired: boolean,
+  minLen: number,
+  maxLen: number,
+  inputElement: HTMLInputElement | null,
+  errorLabel: HTMLLabelElement | null,
+  regexpErrorMsg: string,
+  error: string;
+}
+
+export class InputValidatorConfiguration {
+  meta: IMeta= {
+      regex: null,
+      isRequired: false,
+      minLen: 0,
+      maxLen: Infinity,
+      inputElement: null,
+      errorLabel: null,
+      regexpErrorMsg: '',
+      error: '',
+    };
+
+  setErrorMessage(errorText: string) {
+    this.meta.regexpErrorMsg = errorText;
+    return this;
+  }
+
+  setRegexpRule(regex: RegExp) {
+    this.meta.regex = regex;
+    return this;
+  }
+
+  required() {
+    this.meta.isRequired = true;
+    return this;
+  }
+
+  minLen(len: number) {
+    this.meta.minLen = len;
+    return this;
+  }
+
+  maxLen(len: number) {
+    this.meta.maxLen = len;
+    return this;
+  }
+
+  printErrorToLabel(label: HTMLLabelElement) {
+    this.meta.errorLabel = label;
+    return this;
+  }
+
+  attachToInput(element: HTMLInputElement) {
+    this.meta.inputElement = element;
+    element.addEventListener('focus', () => this.handleValidationEvent());
+    element.addEventListener('blur', () => this.handleValidationEvent());
+    return this;
+  }
+
+  validate() {
+    return this.handleValidationEvent();
+  }
+
+  handleValidationEvent() {
+    const element = this.meta.inputElement;
+    if(element === null){
+      return false;
+    }
+    this.clearError();
+    if (!this.validateReal(element.value)) {
+      this.printError();
+      this.markAsInvalid(element);
+      return false;
+    }
+    this.markAsValid(element);
+    return true;
+  }
+
+  clearError() {
+    this.meta.error = '';
+    if (this.meta.errorLabel) {
+      this.meta.errorLabel.innerHTML = '';
+    }
+  }
+
+  printError() {
+    if (this.meta.errorLabel) {
+      this.meta.errorLabel.innerHTML = this.meta.error;
+    }
+  }
+
+  markAsInvalid(input: HTMLInputElement) {
+    input.setAttribute('data-validation', 'invalid');
+  }
+
+  markAsValid(input: HTMLInputElement) {
+    input.setAttribute('data-validation', 'valid');
+  }
+
+  private validateReal(value: string) {
+    // required
+    if (!value && this.meta.isRequired) {
+      this.meta.error = 'This field is required';
+      return false;
+    } if (!this.meta.isRequired && !value) {
+      return true;
     }
 
-    setErrorMessage(errorText){
-        this._meta.regexpErrorMsg = errorText;
-        return this;
+    // length
+    if (value.length < this.meta.minLen) {
+      this.meta.error = `Value must be at least ${this.meta.minLen} length`;
+      return false;
     }
-
-    setRegexpRule(regex:RegExp){
-        this._meta.regex = regex;
-        return this;
+    if (value.length > this.meta.maxLen) {
+      this.meta.error = `Value must be less than ${this.meta.maxLen} characters`;
+      return false;
     }
-
-    required(){
-        this._meta.isRequired = true;
-        return this;
+    // regexp
+    if (this.meta.regex && !this.meta.regex.test(value)) {
+      this.meta.error = this.meta.regexpErrorMsg;
+      return false;
     }
-
-    minLen(len:number){
-        this._meta.minLen=len;
-        return this;
-    }
-
-    maxLen(len:number){
-        this._meta.maxLen=len;
-        return this;
-    }
-
-    printErrorToLabel(label: HTMLLabelElement){
-        this._meta.errorLabel = label;
-        return this;
-    }
-
-    attachToInput(element: HTMLInputElement){
-        this._meta.inputElement = element;
-        element.addEventListener('focus',()=>this._handleValidationEvent());
-        element.addEventListener('blur',()=>this._handleValidationEvent());
-        return this;
-    }
-
-    validate(){
-        return this._handleValidationEvent();
-    }
-
-    _handleValidationEvent(){
-        let element = this._meta.inputElement
-        this._clearError();
-        if(!this._validate(element.value)){
-            this._printError();
-            this._markAsInvalid(element);
-            return false;
-        }else{
-            this._markAsValid(element);
-            return true;
-        }
-    }
-
-    _clearError(){
-        this._meta.error = "";
-        if(this._meta.errorLabel){
-            this._meta.errorLabel.innerHTML = "";
-        }
-    }
-
-    _printError(){
-        if(this._meta.errorLabel){
-            this._meta.errorLabel.innerHTML = this._meta.error;
-        }
-    }
-
-    _markAsInvalid(input:HTMLInputElement){
-        input.setAttribute("data-validation", "invalid");
-    }
-
-    _markAsValid(input:HTMLInputElement){
-        input.setAttribute("data-validation", "valid");
-    }
-
-    _validate(value:string){
-        //required
-        if(!value && this._meta.isRequired){
-            this._meta.error = "This field is required";
-            return false;
-        }
-        //length
-        if(value.length < this._meta.minLen){
-            this._meta.error = `Value must be at least ${this._meta.minLen} length`;
-            return false;
-        }
-        if(value.length > this._meta.maxLen){
-            this._meta.error = `Value must be less than ${this._meta.maxLen} characters`;
-            return false;
-        }
-        //regexp
-        if(this._meta.regex && !this._meta.regex.test(value)){
-            this._meta.error = this._meta.regexpErrorMsg;
-            return false;
-        }
-        return true;
-    }
+    return true;
+  }
 }
