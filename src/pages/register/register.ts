@@ -19,7 +19,6 @@ export default class RegisterPage extends Block<SignupProps> {
   }
 
   override componentDidMount(): void {
-    console.log(JSON.stringify(this.props));
     if (this.props.isSignedIn) {
       Router.getInstance().go('/messenger');
     }
