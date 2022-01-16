@@ -5,7 +5,7 @@ import RegisterPage, { defaultSignUpUser } from './src/pages/register/register';
 import Route from './src/utils/route';
 import EditProfilePage from './src/pages/editProfile/EditProfile';
 import Router from './src/utils/router';
-import { store } from './src/store';
+import { store } from './src/store/index';
 import { defaultProfileProps } from './src/utils/constants';
 
 const rootElement = document.getElementById("root");
