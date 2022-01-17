@@ -11,6 +11,8 @@ export default class Router {
 
   private static routerInstance: Router | null;
 
+  private defaultRoute: Route<IProps>;
+
   private constructor() {
     this.history = window.history;
     this.currentRoute = null;
@@ -29,9 +31,16 @@ export default class Router {
     return this;
   }
 
+  useDefault(route: Route<IProps>) {
+    this.defaultRoute = route;
+    return this;
+  }
+
   start() {
     window.onpopstate = () => {
-      this.onRoute(window.location.pathname);
+      setTimeout(()=>{
+        this.onRoute(window.location.pathname);
+      }, 0)
     };
     this.onRoute(window.location.pathname);
   }
@@ -51,7 +60,11 @@ export default class Router {
   }
 
   private onRouteReal(pathname: string) {
-    const route = this.getRoute(pathname);
+    let route = this.getRoute(pathname);
+
+    if(!route){
+      route = this.defaultRoute;
+    }
 
     if (this.currentRoute) {
       this.currentRoute.leave();
@@ -64,7 +77,7 @@ export default class Router {
   }
 
   go(pathname: string) {
-    this.history.pushState({ page: typeof this.currentRoute }, '', pathname);
+    this.history.pushState({ page: typeof this.currentRoute, shallow: true }, '', pathname);
     this.onRoute(pathname);
   }
 

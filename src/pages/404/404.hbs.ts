@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../src/pages/site.css">
-    <title>404 NotFound</title>
-</head>
-
-<body>
-    <style>
+export default `<style>
         .img-centered {
             width: 214px;
             height: 242px;
@@ -33,9 +21,6 @@
         <h2>There is nothing on this page!</h2>
         <p class="text-silenced text-centered">The page you are looking for doesn't exist.</p>
         <p class="text-silenced text-centered">For now look at this cat. Then go back to site.</p>
-        <img class="img-centered" src="../img/cat.png">
+        <img class="img-centered" id="image">
         <a class="link" href="javascript:history.back()">Go back to site</a>
-    </div>
-</body>
-
-</html>
+    </div>`;
