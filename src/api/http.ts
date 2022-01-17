@@ -12,12 +12,13 @@ type Options = {
 };
 
 export default class HTTPTransport {
-  static API_URL = 'https://ya-praktikum.tech/api/v2';
+  private API_URL: string;
 
   protected endpoint: string;
 
-  constructor(endpoint: string) {
-    this.endpoint = `${HTTPTransport.API_URL}${endpoint}`;
+  constructor(baseAPI: string,endpoint: string) {
+    this.API_URL = baseAPI; 
+    this.endpoint = `${this.API_URL}${endpoint}`;
   }
 
   public get<Response>(path = '/'): Promise<Response> {

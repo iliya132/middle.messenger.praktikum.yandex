@@ -23,30 +23,30 @@ class AuthController extends BasicController {
   }
 
   async getUser(): Promise<authState> {
-    const answer: IUserApiReponse | string = await this.api.read()
-      .then((response) => response).catch((exception) => exception.reason);
-    if (typeof answer === 'string') {
+    try {
+      const answer = await this.api.read();
       return {
-        error: answer,
+        error: '',
+        isSignedIn: true,
+        user: {
+          id: (answer as IUserApiReponse).id,
+          avatar: (answer as IUserApiReponse).avatar ? pathToStaticResources + (answer as IUserApiReponse).avatar : '',
+          email: (answer as IUserApiReponse).email,
+          firstName: (answer as IUserApiReponse).first_name,
+          displayName: (answer as IUserApiReponse).display_name,
+          login: (answer as IUserApiReponse).login,
+          password: '',
+          phone: (answer as IUserApiReponse).phone,
+          secondName: (answer as IUserApiReponse).second_name,
+        },
+      };
+    } catch (exception) {
+      return {
+        error: exception.reason,
         isSignedIn: false,
-        user: null,
+        user: null
       };
     }
-    return {
-      error: '',
-      isSignedIn: true,
-      user: {
-        id: (answer as IUserApiReponse).id,
-        avatar: (answer as IUserApiReponse).avatar ? pathToStaticResources + (answer as IUserApiReponse).avatar : '',
-        email: (answer as IUserApiReponse).email,
-        firstName: (answer as IUserApiReponse).first_name,
-        displayName: (answer as IUserApiReponse).display_name,
-        login: (answer as IUserApiReponse).login,
-        password: '',
-        phone: (answer as IUserApiReponse).phone,
-        secondName: (answer as IUserApiReponse).second_name,
-      },
-    };
   }
 
   async fetchUser() {

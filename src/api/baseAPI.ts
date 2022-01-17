@@ -2,16 +2,9 @@ import HTTPTransport from './http';
 
 export default abstract class BaseAPI {
   protected http: HTTPTransport;
+  private static API_URL = 'https://ya-praktikum.tech/api/v2';
 
   protected constructor(endpoint: string) {
-    this.http = new HTTPTransport(endpoint);
+    this.http = new HTTPTransport(BaseAPI.API_URL, endpoint);
   }
-
-    public abstract create?(data: unknown): Promise<unknown>;
-
-    public abstract read?(identifier?: string): Promise<unknown>;
-
-    public abstract update?(identifier: string, data: unknown): Promise<unknown>;
-
-    public abstract delete?(identifier: string): Promise<unknown>;
 }
