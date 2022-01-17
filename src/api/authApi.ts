@@ -42,13 +42,7 @@ export default class AuthAPI extends BaseAPI {
     return this.http.post('/logout');
   }
 
-  read(): Promise<IUserApiReponse> {
+  read(): Promise<IUserApiReponse | string> {
     return this.http.get('/user');
   }
-
-  create: undefined;
-
-  update: undefined;
-
-  delete: undefined;
 }

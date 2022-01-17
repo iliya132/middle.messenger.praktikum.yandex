@@ -7,6 +7,7 @@ import EditProfilePage from './src/pages/editProfile/EditProfile';
 import Router from './src/utils/router';
 import { store } from './src/store/index';
 import { defaultProfileProps } from './src/utils/constants';
+import { NotFoundPage } from './src/pages/404/404';
 
 const rootElement = document.getElementById("root");
 
@@ -27,10 +28,13 @@ function configureRoute() {
   const settingsRoute = new Route("/settings", () =>
     store.connect(new EditProfilePage(rootElement, defaultProfileProps)));
 
+  const notFoundRoute = new Route("*", () => new NotFoundPage(null, rootElement));
+
   Router.getInstance()
     .use(loginRoute)
     .use(registerRoute)
     .use(chatRoute)
     .use(settingsRoute)
+    .useDefault(notFoundRoute)
     .start();
 }

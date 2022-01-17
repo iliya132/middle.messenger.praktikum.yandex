@@ -20,7 +20,9 @@ export default abstract class Block<TPropsType extends IProps> {
   constructor(props: TPropsType, root: HTMLElement) {
     const eventBus = new EventBus();
     this.root = root;
-    this.props = this.makePropsProxy(props);
+    if(props){
+      this.props = this.makePropsProxy(props);
+    }
 
     this.eventBus = () => eventBus;
 

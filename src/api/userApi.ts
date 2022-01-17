@@ -6,18 +6,6 @@ export default class UserApi extends BaseAPI {
     super('/user');
   }
 
-  public create?: undefined;
-
-  public read?(): Promise<unknown> {
-    throw new Error('Method not implemented.');
-  }
-
-  public update?(): Promise<unknown> {
-    throw new Error('Method not implemented.');
-  }
-
-  public delete?: undefined;
-
   public changeAvatar(avatarData: FormData) {
     return this.http.putFormData('/profile/avatar', avatarData);
   }
@@ -26,14 +14,14 @@ export default class UserApi extends BaseAPI {
     return this.http.put('/password', { oldPassword, newPassword });
   }
 
-  public changeProfile(submittedData: IEditProfileProps) {
+  public changeProfile({ firstName, secondName, displayName, login, email, phone }: IEditProfileProps) {
     const data: changeProfileRequest = {
-      first_name: submittedData.firstName,
-      second_name: submittedData.secondName,
-      display_name: submittedData.displayName,
-      login: submittedData.login,
-      email: submittedData.email,
-      phone: submittedData.phone,
+      first_name: firstName,
+      second_name: secondName,
+      display_name: displayName,
+      login: login,
+      email: email,
+      phone: phone,
     };
     return this.http.put('/profile', data);
   }

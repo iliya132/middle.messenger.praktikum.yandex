@@ -2,6 +2,7 @@ import EventBus from '../utils/eventBus';
 
 export default class WebSocketTransport {
   static API_URL = '//ya-praktikum.tech/';
+  private static PING_INTERVAL = 50000;
 
   protected socket: WebSocket;
 
@@ -24,7 +25,7 @@ export default class WebSocketTransport {
       if (currentSocket && currentSocket.readyState !== WebSocket.CLOSED && currentSocket.readyState !== WebSocket.CLOSING) {
         this.getCurrentSocket().send(JSON.stringify({ content: '', type: 'ping' }));
       }
-    }, 50000);
+    }, WebSocketTransport.PING_INTERVAL);
 
     this.socket.addEventListener('close', () => {
       this._isConnected = false;
@@ -49,8 +50,6 @@ export default class WebSocketTransport {
       console.log('Ошибка', event);
     });
   }
-
-
 
   private getCurrentSocket() {
     return this.socket;

@@ -141,7 +141,7 @@ export default class RegisterPage extends Block<SignupProps> {
     });
   }
 
-  handleSubmit() {
+  private handleSubmit() {
     authController.signUp(this.data());
   }
 
