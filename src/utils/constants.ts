@@ -1,11 +1,4 @@
-import cat from '../../static/img/cat.png';
-import cats from '../../static/img/cats.png';
-import showMore from '../../static/img/showMore.png';
 import { IEditProfileProps, IInputGroupParams, contextMenuProps } from '../types/Types';
-
-export const catSrc = cat;
-export const catsSrc = cats;
-export const showMoreSrc = showMore;
 export const loginPageProps: IInputGroupParams = {
   input: [
     {
@@ -16,7 +9,7 @@ export const loginPageProps: IInputGroupParams = {
       title: '',
       className: '',
       autocomplete: 'username',
-
+      
     },
     {
       id: 'passwordField',
@@ -89,8 +82,8 @@ export const registerPageParams: IInputGroupParams = {
   ],
 };
 
-export const editProfileParams: IEditProfileProps = {
-  imgUrl: catSrc,
+export const editProfileParams = {
+  imgUrl: '',
   colOneInputs: [
     {
       id: 'firstNameField',
@@ -183,19 +176,41 @@ export const contextProps:contextMenuProps = {
       id: 'deleteChat',
     },
     {
-      name: 'Disable notifications',
-      id: 'disableNotifications',
+      name: 'Add users',
+      id: 'addUsers',
     },
     {
-      name: 'Pin chat',
-      id: 'pinChat',
+      name: 'Remove users',
+      id: 'removeUsers',
     },
   ],
 };
 
 export const OnlyLettersRegex = /^[A-Za-z-А-Яа-я]*$/;
+export const OnlyLettersRegexDescription = 'Field can contain only letters';
 export const AtLeastOneLetterAndLettersOrDigitsRegex = /^(?=.*[A-z])[A-Za-z-_0-9]*$/;
+export const AtLeastOneLetterAndLettersOrDigitsRegexDescription = 'Field must contain at least 1 letter and digit';
 export const OnlyLatinLettersRegex = /^[A-Za-z]*$/;
+export const OnlyLatinLettersRegexDescription = 'Field can contain only latin characters';
+export const OnlyLatinLettersOrSpaceRegex = /^[A-Za-z ]*$/;
+export const OnlyLatinLettersOrSpaceRegexDescription = 'Field can contain only latin characters or space';
+// eslint-disable-next-line no-control-regex
 export const EmailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+export const EmailRegexDescription = 'Entered email is invalid';
 export const AtLeastOneUpperLetterAndOneDigit = /^(?=.*[A-Z])(?=.*[0-9]).*/;
+export const AtLeastOneUpperLetterAndOneDigitDescription = 'Field must contain at least 1 uppercase and 1 digit';
 export const PhoneRegex = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+export const PhoneRegexDescription = 'Entered phone is invalid';
+
+export const defaultProfileProps: IEditProfileProps = {
+  firstName: '',
+  secondName: '',
+  displayName: '',
+  email: '',
+  login: '',
+  newPassword: '',
+  oldPassword: '',
+  phone: '',
+  error: '',
+  avatar: '',
+};

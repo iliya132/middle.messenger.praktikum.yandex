@@ -5,6 +5,9 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "sourceMap": true,
-        "strictNullChecks": true
-    }
+        "strictNullChecks": true,
+        "noEmit": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
 }

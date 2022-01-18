@@ -18,7 +18,8 @@
 }
 
 html,
-body {
+body,
+#root {
   height: 100%;
   padding: 0;
   margin: 0;
@@ -199,8 +200,17 @@ body {
 
 .profile-container {
   min-height: 730px;
-  width: 1300px;
-  transform: translate(-650px, -370px) !important;
+  max-width: 1300px;
+  width: 90%;
+  padding: 15px;
+  transform: translate(-50%, -50%) !important;
+}
+
+.flex-hor {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .modal {
@@ -251,4 +261,8 @@ body {
 .avatar-sm {
   width: 90px;
   height: 90px;
+}
+
+.flow-hor {
+  display: flex;
 }

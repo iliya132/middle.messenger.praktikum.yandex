@@ -1,42 +1,40 @@
-import { ChatsPage } from './src/pages/chatsPage/Chats';
-import { FormEvents } from './src/utils/constants';
+import { ChatsPage, defaultChatsState } from './src/pages/chatsPage/Chats';
 import RegisterPartials from './src/components/RegisterPartials';
-import LoginPage, { LoginEvents } from './src/pages/login/login';
-import RegisterPage, { RegisterEvents } from './src/pages/register/register';
-import { chatPageTestProps } from './src/utils/testData';
-import { AccountEvents } from './src/types/Types';
+import LoginPage, { loginDefaultProps } from './src/pages/login/login';
+import RegisterPage, { defaultSignUpUser } from './src/pages/register/register';
+import Route from './src/utils/route';
+import EditProfilePage from './src/pages/editProfile/EditProfile';
+import Router from './src/utils/router';
+import { store } from './src/store/index';
+import { defaultProfileProps } from './src/utils/constants';
+import { NotFoundPage } from './src/pages/404/404';
 
-// simple routing for demo purposes only
-
-function clearView() {
-  document.body.innerHTML = '';
-}
-
-function renderLoginPage() {
-  clearView();
-  const loginPage = new LoginPage(document.body);
-  loginPage.eventBus().on(LoginEvents.SignUp, () => {
-    renderRegisterPage();
-  });
-  loginPage.eventBus().on(FormEvents.Submit, () => renderChatPage());
-}
-
-function renderRegisterPage() {
-  clearView();
-  const registerPage = new RegisterPage(document.body);
-  registerPage.eventBus().on(RegisterEvents.Login, () => {
-    renderLoginPage();
-  });
-  registerPage.eventBus().on(FormEvents.Submit, () => renderChatPage());
-}
-
-function renderChatPage() {
-  clearView();
-  const chatPage = new ChatsPage(document.body, chatPageTestProps);
-  chatPage.eventBus().on(AccountEvents.Logout, () => {
-    renderLoginPage();
-  });
-}
+const rootElement = document.getElementById("root");
 
 RegisterPartials();
-renderLoginPage();
+configureRoute();
+
+
+function configureRoute() {
+  const loginRoute = new Route("/", () =>
+    store.connect(new LoginPage(rootElement, loginDefaultProps)));
+
+  const registerRoute = new Route("/sign-up", () =>
+    store.connect(new RegisterPage(rootElement, defaultSignUpUser)));
+
+  const chatRoute = new Route("/messenger", () =>
+    store.connect(new ChatsPage(rootElement, defaultChatsState)));
+
+  const settingsRoute = new Route("/settings", () =>
+    store.connect(new EditProfilePage(rootElement, defaultProfileProps)));
+
+  const notFoundRoute = new Route("*", () => new NotFoundPage(null, rootElement));
+
+  Router.getInstance()
+    .use(loginRoute)
+    .use(registerRoute)
+    .use(chatRoute)
+    .use(settingsRoute)
+    .useDefault(notFoundRoute)
+    .start();
+}

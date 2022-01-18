@@ -1,5 +1,5 @@
-import Handlebars from 'handlebars/dist/cjs/handlebars';
-import LinkTemplate from './link.templ';
+import Handlebars from 'handlebars';
+import LinkTemplate from './link.hbs';
 
 Handlebars.registerPartial('link', LinkTemplate);
 

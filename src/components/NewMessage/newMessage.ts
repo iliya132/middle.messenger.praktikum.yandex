@@ -1,23 +1,34 @@
 import { templateCompiled } from './newMessage.hbs';
-import Block, { BlockEvents } from '../../utils/block';
+import Block from '../../utils/block';
 import { FormEvents } from '../../utils/constants';
+import { IProps } from '../../types/Types';
+import { RootState } from '../../utils/store';
 
-export class NewMessage extends Block<object> {
+export class NewMessage extends Block<IProps> {
   constructor(root: HTMLElement) {
-    super({}, root);
-    this.eventBus().on(BlockEvents.FLOW_RENDER, this._addEvents);
-    this._addEvents();
+    super({ error: '' }, root);
   }
 
   render() {
+    const root = this.getElement();
+    if (!root) {
+      return;
+    }
     const newDiv = document.createElement('div');
     newDiv.innerHTML = templateCompiled(this.props).trim();
-    this.element.appendChild(newDiv.firstChild as ChildNode);
+    root.appendChild(newDiv.firstChild as ChildNode);
+    this._addEvents();
   }
 
+  stateToProps: (state: RootState) => IProps;
+
   private _addEvents() {
-    const input = this.element.querySelector('#message') as HTMLInputElement;
-    const sendBtn = this.element.querySelector('#send-new-message-btn') as HTMLButtonElement;
+    const root = this.getElement();
+    if (!root) {
+      return;
+    }
+    const input = root.querySelector('#message') as HTMLInputElement;
+    const sendBtn = root.querySelector('#send-new-message-btn') as HTMLButtonElement;
     sendBtn.addEventListener('click', () => {
       if (input.value) {
         this.eventBus().emit(FormEvents.Submit, input.value);
@@ -25,4 +36,9 @@ export class NewMessage extends Block<object> {
       }
     });
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected componentDidMount(): void { }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public fetchData(): void { }
 }
