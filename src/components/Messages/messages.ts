@@ -1,7 +1,7 @@
 import { IMessage, IMessagesProps } from '../../types/Types';
 import Block from '../../utils/block';
 import { RootState } from '../../utils/store';
-import { templateCompiled } from './messages.hbs';
+import templateCompiled from './messages.handlebars';
 
 export class Messages extends Block<IMessagesProps> {
 

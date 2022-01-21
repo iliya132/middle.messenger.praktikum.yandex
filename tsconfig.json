@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "noEmit": true
+        "noEmit": false
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

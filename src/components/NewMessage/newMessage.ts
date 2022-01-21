@@ -1,4 +1,4 @@
-import { templateCompiled } from './newMessage.hbs';
+import templateCompiled from './template.handlebars';
 import Block from '../../utils/block';
 import { FormEvents } from '../../utils/constants';
 import { IProps } from '../../types/Types';

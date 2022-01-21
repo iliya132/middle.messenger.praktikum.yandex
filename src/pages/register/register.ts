@@ -3,7 +3,7 @@ import Block from '../../utils/block';
 import {
   AtLeastOneLetterAndLettersOrDigitsRegex, AtLeastOneLetterAndLettersOrDigitsRegexDescription, AtLeastOneUpperLetterAndOneDigit, AtLeastOneUpperLetterAndOneDigitDescription, EmailRegex, EmailRegexDescription, FormEvents, OnlyLettersRegex, PhoneRegex, PhoneRegexDescription, registerPageParams,
 } from '../../utils/constants';
-import { templateCompiled } from './register.hbs';
+import templateCompiled from './register.handlebars';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
 import authController from '../../controllers/authController';
 import Router from '../../utils/router';

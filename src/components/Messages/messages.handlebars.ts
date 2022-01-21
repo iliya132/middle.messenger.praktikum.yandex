@@ -1,0 +1,11 @@
+const template = `<div class="chat-messages">
+    <div class="messages h100">
+        {{#each messages}}
+        <div class="{{type}}">
+            <span>{{content}}</span>
+        </div>
+        {{/each}}
+    </div>
+</div>`
+
+export default Handlebars.compile(template);

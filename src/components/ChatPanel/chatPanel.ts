@@ -1,6 +1,6 @@
 import { IChatPanelProps } from '../../types/Types';
 import Block from '../../utils/block';
-import { templateCompiled } from './chatPanel.hbs';
+import templateCompiled from './chatPanel.handlebars';
 
 const togglerPrefix = 'toggler_';
 

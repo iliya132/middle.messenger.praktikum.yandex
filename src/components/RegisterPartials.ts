@@ -1,8 +1,7 @@
-import Handlebars from 'handlebars';
-import inputWithLabelHbs from './Partials/InputWithLabel/inputWithLabel.hbs';
-import inputGroupHbs from './Partials/InputGroup/inputGroup.tmpl.hbs';
-import contextMenuHbs from './Partials/ContextMenu/contextMenu.hbs';
-import linkHbs from './Partials/Link/link.hbs';
+import inputWithLabelHbs from './Partials/InputWithLabel/template.handlebars';
+import inputGroupHbs from './Partials/InputGroup/template.handlebars';
+import contextMenuHbs from './Partials/ContextMenu/template.handlebars';
+import linkHbs from './Partials/Link/template.handlebars';
 
 let isRegistered = false;
 export default function RegisterPartials() {

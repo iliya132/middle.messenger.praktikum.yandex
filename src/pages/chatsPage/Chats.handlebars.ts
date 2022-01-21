@@ -1,7 +1,4 @@
-import Handlebars from 'handlebars';
-
-const template = `
-<div class="h100 bg-light">
+const template = `<div class="h100 bg-light">
     <div class="container h100 bg-white border-all">
         <div class="grid chats-template h100">
             <div class="chats-header chats-list-template" id="user-info-root">
@@ -15,9 +12,6 @@ const template = `
         </div>
     </div>
 </div>
-{{>ContextMenu}}
-`;
+{{> ../../components/Partials/ContextMenu/ContextMenu}}`
 
-export default template;
-
-export const templateCompiled = Handlebars.compile(template);
+export default Handlebars.compile(template);
