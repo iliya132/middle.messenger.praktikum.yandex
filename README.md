@@ -25,7 +25,7 @@
 `npm run check-code`
 
 
-[Ссылка на приложение](https://practicumhomework.netlify.app/)
+[Ссылка на приложение](https://immense-everglades-42065.herokuapp.com)
 
 [Макет приложения в фигма](https://www.figma.com/file/GDwYFow0I1r3vZqKhDDVSz/YandexParcticumChat?node-id=0%3A1)
 
