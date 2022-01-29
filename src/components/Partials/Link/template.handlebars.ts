@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `{{#if Css}}
 <a class="link-primary {{Css}}" href="{{{href}}}" id={{id}}>{{Caption}}</a>
 {{else}}

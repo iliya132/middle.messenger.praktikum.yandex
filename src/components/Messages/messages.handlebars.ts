@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="chat-messages">
     <div class="messages h100">
         {{#each messages}}

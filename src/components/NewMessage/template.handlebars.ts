@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="new-message">
     <input type="text" id="message" class="message-input" placeholder="Type message here" name="message"
         autocomplete="new-password">

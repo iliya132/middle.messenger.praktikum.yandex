@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="popup hidden" id="context-popup">
     <div class="context-menu">
         {{#each options}}

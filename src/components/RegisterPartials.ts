@@ -1,3 +1,4 @@
+import Handlebars from "handlebars";
 import inputWithLabelHbs from './Partials/InputWithLabel/template.handlebars';
 import inputGroupHbs from './Partials/InputGroup/template.handlebars';
 import contextMenuHbs from './Partials/ContextMenu/template.handlebars';

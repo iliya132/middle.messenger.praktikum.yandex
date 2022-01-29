@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="chat-info" id={{chatId}}>
     <img class="img-circle avatar" src="{{avatar}}">
     <div class="chat-description">

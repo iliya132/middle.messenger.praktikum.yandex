@@ -1,3 +1,5 @@
+import Handlebars from "handlebars";
+
 const template = `<div id="editProfileContainer">
     <div class="prevent-out-clicks"></div>
     <div class="centered-container profile-container modal" >
@@ -14,7 +16,7 @@ const template = `<div id="editProfileContainer">
                         {{#each colOneInputs}}
                             <p>{{title}}</p>
                             <div>
-                                {{> ../../components/partials/InputWithLabel/InputWithLabel inputType=type Id=id placeholder=placeholder className="small-input"}}
+                                {{> InputWithLabel inputType=type Id=id placeholder=placeholder className="small-input"}}
                             </div>
                         {{/each}}
                 </div>
@@ -22,7 +24,7 @@ const template = `<div id="editProfileContainer">
                     {{#each colTwoInputs}}
                             <p>{{title}}</p>
                             <div>
-                                {{> ../../components/partials/InputWithLabel/InputWithLabel inputType=type Id=id placeholder=placeholder className="small-input"}}
+                                {{> InputWithLabel inputType=type Id=id placeholder=placeholder className="small-input"}}
                             </div>
                         {{/each}}
                 </div>

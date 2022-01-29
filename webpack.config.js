@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HandlebarsPlugin = require("handlebars-webpack-plugin");
+const port = getPort();
 
 module.exports = {
     mode: 'development',
@@ -9,8 +9,8 @@ module.exports = {
         static: {
             directory: path.join(__dirname, 'dist'),
         },
-        compress: true,
-        port: 9000,
+        port: port,
+        historyApiFallback: true
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -24,8 +24,7 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js', '.json'],
         alias: {
-            'handlebars': 'handlebars/dist/handlebars.min.js',
-            'postcss': 'postcss/dist/postcss.min.js'
+            'handlebars': 'handlebars/dist/handlebars.min.js'
         }
     },
     module: {
@@ -49,12 +48,31 @@ module.exports = {
             },
             {
                 test: /\.css$/,
+                exclude: /node_modules/,
                 use: [
-                    'style-loader',
-                    'postcss-loader'
+                    {
+                        loader: 'style-loader',
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 1,
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader'
+                    }
                 ]
             }
         ]
     }
 
+}
+
+function getPort(){
+    let prt = Number(process.env.port);
+    if(Number.isNaN(prt)){
+        prt = 3000;
+    }
+    return prt;
 }

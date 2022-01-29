@@ -1,6 +1,8 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="input-group">
     {{#each input}}
-        {{> ../InputWithLabel/template.handlebars inputType=type Id=id placeholder=placeholder className=className name=name}}
+        {{> InputWithLabel inputType=type Id=id placeholder=placeholder className=className name=name}}
     {{/each}}
 </div>`
 

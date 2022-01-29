@@ -1,15 +1,17 @@
+import Handlebars from "handlebars";
+
 const template = `<div class="centered-container text-centered">
     <h2>Please login to continue</h2>
     <form>
         <div class="input-group">
-            {{> ../../components/partials/InputGroup/InputGroup}}
+            {{> InputGroup}}
             {{#if error}}
                 <br>
                 <span style="color: red">{{error}}</span><br/>
             {{/if}}
             <button class="button-primary mt-2">Sign in</button>
             <br>
-            {{> ../../components/partials/Link/Link Caption="Sign up" Css="mt-1" href="/sign-up" id="signUpLink"}}
+            {{> Link Caption="Sign up" Css="mt-1" href="/sign-up" id="signUpLink"}}
         </div>
     </form>
 </div>`
