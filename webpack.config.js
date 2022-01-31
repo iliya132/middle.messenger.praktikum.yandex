@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const port = getPort();
 
 module.exports = {
     mode: 'development',
@@ -9,7 +8,6 @@ module.exports = {
         static: {
             directory: path.join(__dirname, 'dist'),
         },
-        port: port,
         historyApiFallback: true
     },
     output: {
@@ -67,12 +65,4 @@ module.exports = {
         ]
     }
 
-}
-
-function getPort(){
-    let prt = Number(process.env.port);
-    if(Number.isNaN(prt)){
-        prt = 3000;
-    }
-    return prt;
 }

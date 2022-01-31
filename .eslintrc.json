@@ -27,7 +27,9 @@
               "ts": "never",
               "tsx": "never"
             }
-         ]
+            
+         ],
+         "eol-last": 2
     },
     "settings": {
         "import/resolver": {
