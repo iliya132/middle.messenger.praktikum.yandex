@@ -7,3 +7,4 @@
 package.json
 .eslintrc.json
 *spec.ts
+webpack*

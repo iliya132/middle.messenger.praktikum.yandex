@@ -3,7 +3,7 @@ import { IChat, IUserPanelProps } from '../../types/Types';
 import Block, { BlockEvents } from '../../utils/block';
 import { defaultAvatarSrc, showMoreSrc } from '../../utils/images';
 import { RootState } from '../../utils/store';
-import { templateCompiled } from './userPanel.hbs';
+import templateCompiled from './userPanel.handlebars';
 
 export class UserPanel extends Block<IUserPanelProps> {
   constructor(root:HTMLElement, props: IUserPanelProps) {

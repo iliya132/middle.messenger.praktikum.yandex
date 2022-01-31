@@ -16,7 +16,7 @@ import {
   PhoneRegex,
   PhoneRegexDescription,
 } from '../../utils/constants';
-import { templateCompiled } from './EditProfile.hbs';
+import templateCompiled from './EditProfile.handlebars';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
 import Router from '../../utils/router';
 import authController from '../../controllers/authController';

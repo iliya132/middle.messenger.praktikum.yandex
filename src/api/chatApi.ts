@@ -1,4 +1,4 @@
-import { AccountEvents, IChat, IToken } from '../types/Types';
+import { IChat, IToken } from '../types/Types';
 import BaseAPI from './baseAPI';
 
 export default class ChatApi extends BaseAPI {

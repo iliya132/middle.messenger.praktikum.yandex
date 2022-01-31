@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars';
-import LinkTemplate from './link.hbs';
+import LinkTemplate from './template.handlebars';
 
 Handlebars.registerPartial('link', LinkTemplate);
 

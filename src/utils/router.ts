@@ -23,7 +23,7 @@ export default class Router {
     if (!Router.routerInstance) {
       Router.routerInstance = new Router();
     }
-    return Router.routerInstance;
+return Router.routerInstance;
   }
 
   use<TProps extends IProps>(route: Route<TProps>) {
@@ -36,7 +36,7 @@ export default class Router {
     return this;
   }
 
-  start() {
+start() {
     window.onpopstate = () => {
       setTimeout(()=>{
         this.onRoute(window.location.pathname);

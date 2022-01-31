@@ -1,7 +1,7 @@
 import { IProps } from "../../types/Types";
 import Block from "../../utils/block";
 import { RootState } from "../../utils/store";
-import template from './404.hbs';
+import template from './404.handlebars';
 import { catSrc } from "../../utils/images";
 
 export class NotFoundPage extends Block<IProps>{

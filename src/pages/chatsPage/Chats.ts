@@ -1,7 +1,7 @@
 import Block from '../../utils/block';
 import ChatPanel, { ChatPanelEvents } from '../../components/ChatPanel/chatPanel';
 import { ActiveChatPanel, defaultActiveChatPanelState, UserPanel } from '../../components/UserPanel/userPanel';
-import { templateCompiled } from './Chats.hbs';
+import templateCompiled from './Chats.handlebars';
 import { NewMessage } from '../../components/NewMessage/newMessage';
 import IUser, {
   AccountEvents, IChat, IMessage, IProps, IUserPanelProps,

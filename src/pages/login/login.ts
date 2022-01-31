@@ -1,5 +1,5 @@
 import Block from '../../utils/block';
-import { templateCompiled } from './login.tmpl.hbs';
+import templateCompiled from './login.handlebars';
 import InputValidator, { InputValidatorConfiguration } from '../../utils/inputValidator';
 import { LoginProps } from '../../types/Types';
 import {
